@@ -1,0 +1,47 @@
+//https://www.youtube.com/watch?v=btHrAah0Tkk
+//https://www.youtube.com/watch?v=Qn6D7Tx5N84
+//https://m.blog.naver.com/icbanq/222482411554
+
+#include <SoftwareSerial.h>
+SoftwareSerial soft(2,3); //HC05의 TXD를 아두이노의 2번핀에, RXD를 아두이노의 3번핀에 연결
+
+#include <Servo.h>
+Servo myServo;
+
+boolean blind_state = false; //false : blind down, true : blind up
+
+
+
+void setup()
+{
+	Serial.begin(9600); //시리얼 통신 시작
+	soft.begin(9600); // 블루투스 연결 소프트웨어 시리얼
+	pinMode(4, OUTPUT); //워터펌프를 4번핀에 출력으로
+  myServo.attach(5) //Servo를 5번핀에 연결
+}
+
+void loop()
+{
+	if (Serial.available()) //블루투스 통신으로 데이터를 받으면
+	{
+	int cmd = soft.read();
+	if(cmd == '목욕 준비해줘')
+		{
+		digitalWrite(2, HIGH);
+      		delay(8000)
+      		digitalWrite(2, LOW);
+		}
+  else if(cmd == '영화 틀어줘')
+    if(blind_state == true)
+      {
+      myServo.write(180);
+      blind_state == false;
+      }
+  else if(cmd == '영화 꺼줘')
+    if(blind_state == false)
+      {
+      myServo.write(0);
+      blind_state == true;
+      }
+	}
+}
