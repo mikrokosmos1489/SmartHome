@@ -25,23 +25,23 @@ void loop()
 	if (Serial.available()) //블루투스 통신으로 데이터를 받으면
 	{
 	int cmd = soft.read();
-	if(cmd == '목욕 준비해줘')
+	if(cmd == '1') // 목욕준비해줘
 		{
-		digitalWrite(2, HIGH);
+		digitalWrite(2, HIGH); // 워터펌프 작동
       		delay(8000)
-      		digitalWrite(2, LOW);
+      		digitalWrite(2, LOW); // 워터펌프 끄기
 		}
-  else if(cmd == '영화 틀어줘')
+  else if(cmd == '2') // 영화보여줘
     if(blind_state == true)
       {
-      myServo.write(180);
-      blind_state == false;
+      myServo.write(180); // 블라인드 내리기
+      blind_state = false;
       }
-  else if(cmd == '영화 꺼줘')
+  else if(cmd == '3') // 영화꺼줘
     if(blind_state == false)
       {
-      myServo.write(0);
-      blind_state == true;
+      myServo.write(0); // 블라인드 올리기
+      blind_state = true;
       }
 	}
 }
