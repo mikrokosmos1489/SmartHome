@@ -17,7 +17,7 @@ void setup()
 	Serial.begin(9600); //시리얼 통신 시작
 	soft.begin(9600); // 블루투스 연결 소프트웨어 시리얼
 	pinMode(4, OUTPUT); //워터펌프를 4번핀에 출력으로
-  myServo.attach(5) //Servo를 5번핀에 연결
+  	myServo.attach(5); //Servo를 5번핀에 연결
 }
 
 void loop()
@@ -27,9 +27,9 @@ void loop()
 	int cmd = soft.read();
 	if(cmd == '1') // 목욕준비해줘
 		{
-		digitalWrite(2, HIGH); // 워터펌프 작동
-      		delay(8000)
-      		digitalWrite(2, LOW); // 워터펌프 끄기
+		digitalWrite(4, HIGH); // 워터펌프 작동
+      		delay(8000);
+      		digitalWrite(4, LOW); // 워터펌프 끄기
 		}
   else if(cmd == '2') // 영화보여줘
     if(blind_state == true)
