@@ -7,6 +7,7 @@ SoftwareSerial miBT(2,3); //HM10(아두이노 블루투스 모듈)의 TXD를 아
 
 #include <Servo.h>
 Servo myServo;
+myServo.write(0); // 서보모터를 초기 위치로 설정
 boolean blind_state = false; //false : blind down, true : blind up
 
 #include <DHT.h>
@@ -53,6 +54,10 @@ void loop()
 	      }
 	TEMPERATURE = dht.readTemperature();
 	HUMIDITY = dht.readHumidity();
+	if (isnan(TEMPERATURE) || isnan(HUMIDITY)) {
+  	Serial.println("Failed to read from DHT sensor!");
+  	return;
+	}
 	Serial.print(TEMPERATURE);
 	Serial.print("|");
 	Serial.print(HUMIDITY);
