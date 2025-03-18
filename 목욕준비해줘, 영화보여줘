@@ -7,7 +7,6 @@ SoftwareSerial miBT(2,3); //HM10(아두이노 블루투스 모듈)의 TXD를 아
 
 #include <Servo.h>
 Servo myServo;
-myServo.write(0); // 서보모터를 초기 위치로 설정
 boolean blind_state = false; //false : blind down, true : blind up
 
 #include <DHT.h>
@@ -16,6 +15,13 @@ boolean blind_state = false; //false : blind down, true : blind up
 DHT dht(DHTPIN, DHTTYPE);
 int TEMPERATURE;
 int HUMIDITY;
+
+#define MOTOR_PIN 7 // DC모터 핀 설정
+#define HUMIDFIER_PIN 8 // 가습기 모듈 핀 설정
+#define COMFORTABLE_TEMP_MIN 20.0
+#define COMFORTABLE_TEMP_MAX 25.0
+#define COMFORTABLE_HUMIDITY_MIN 30.0
+#define COMFORTABLE_HUMIDITY_MAX 50.0
 
 
 
@@ -27,6 +33,9 @@ void setup()
 	dht.begin(); //DHT22 센서 초기화
 	pinMode(4, OUTPUT); //워터펌프를 4번핀에 출력으로
   	myServo.attach(5); //Servo를 5번핀에 연결
+	myServo.write(0); // 서보모터를 초기 위치로 설정
+	pinMode(MOTOR_PIN, OUTPUT); //DC모터 핀 출력으로 설정
+	pinMode(HUMIDFIER_PIN, OUTPUT);// 가습기 모듈 핀 출력으로 설정
 }
 
 void loop()
@@ -64,6 +73,22 @@ void loop()
 	miBT.print(TEMPERATURE);
 	miBT.print("|");
 	miBT.print(HUMIDITY);
+
+	if (TEMPERATURE > COMFORTABLE_TEMP_MAX) {
+      	digitalWrite(MOTOR_PIN, HIGH); // DC모터 작동
+    	} 
+	else {
+      	digitalWrite(MOTOR_PIN, LOW);  // DC모터 중지
+    	}
+
+	if (HUMIDITY < COMFORTABLE_HUMIDITY_MIN) {
+      	digitalWrite(HUMIDIFIER_PIN, HIGH); // 가습기 작동
+    	} 
+	else if (HUMIDITY > COMFORTABLE_HUMIDITY_MAX) {
+      	digitalWrite(HUMIDIFIER_PIN, LOW);  // 가습기 중지
+    	}
+
+
 	delay(1000);
 	}
 }
